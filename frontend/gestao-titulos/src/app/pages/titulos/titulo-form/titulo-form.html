@@ -1,0 +1,158 @@
+<h2 mat-dialog-title>
+  {{ isDetail ? 'Detalhes do Título': 'Novo Título' }}
+</h2>
+
+<form [formGroup]="form">
+  <mat-dialog-content>
+
+    <!-- Número do título -->
+    <mat-form-field appearance="outline">
+
+      <mat-label>Número do título</mat-label>
+      <input matInput formControlName="numeroTitulo" maxlength="50">
+      <mat-hint *ngIf="!isDetail" align="end">{{ form.get('numeroTitulo')?.value?.length || 0 }}/50</mat-hint>
+
+      <mat-error *ngIf="form.get('numeroTitulo')?.hasError('required')">
+        Número do título é obrigatório.
+      </mat-error>
+
+      <mat-error *ngIf="form.get('numeroTitulo')?.hasError('maxlength')">
+        Número do título deve ser menor ou igual a 50 caracteres.
+      </mat-error>
+
+      <mat-error *ngIf="form.get('numeroTitulo')?.hasError('pattern')">
+        Número do título inválido.
+      </mat-error>
+
+    </mat-form-field>
+
+    <!-- Nome do devedor -->
+    <mat-form-field appearance="outline">
+
+      <mat-label>Nome do devedor</mat-label>
+      <input matInput formControlName="nomeDevedor" maxlength="150">
+      <mat-hint *ngIf="!isDetail" align="end">{{ form.get('nomeDevedor')?.value?.length || 0 }}/150</mat-hint>
+
+      <mat-error *ngIf="form.get('nomeDevedor')?.hasError('required')">
+        Número do título é obrigatório.
+      </mat-error>
+
+      <mat-error *ngIf="form.get('nomeDevedor')?.hasError('maxlength')">
+        Número do título deve ser menor ou igual a 150 caracteres.
+      </mat-error>
+
+    </mat-form-field>
+
+    <!-- CPF do devedor -->
+    <mat-form-field appearance="outline">
+
+      <mat-label>CPF do devedor</mat-label>
+      <input matInput formControlName="cpfDevedor" mask="000.000.000-00">
+
+      <mat-error *ngIf="form.get('cpfDevedor')?.hasError('required')">
+        CPF do devedor é obrigatório.
+      </mat-error>
+
+    </mat-form-field>
+
+    <!-- Percentual de juros -->
+    <mat-form-field appearance="outline">
+
+      <mat-label>% de juros ao mês</mat-label>
+      <input matInput formControlName="percentualJuros" type="number" min="0" max="100">
+
+      <mat-error *ngIf="form.get('percentualJuros')?.hasError('required')">
+        Percentual de juros é obrigatório.
+      </mat-error>
+
+      <mat-error *ngIf="form.get('percentualJuros')?.hasError('min')">
+        Percentual de juros deve ser maior ou igual a 0.
+      </mat-error>
+
+      <mat-error *ngIf="form.get('percentualJuros')?.hasError('max')">
+        Percentual de juros deve ser menor ou igual a 100.
+      </mat-error>
+
+    </mat-form-field>
+
+    <!-- Percentual de multa -->
+    <mat-form-field appearance="outline">
+
+      <mat-label>% de multa</mat-label>
+      <input matInput formControlName="percentualMulta" type="number" min="0" max="100">
+
+      <mat-error *ngIf="form.get('percentualMulta')?.hasError('required')">
+        Percentual de multa é obrigatório.
+      </mat-error>
+
+      <mat-error *ngIf="form.get('percentualMulta')?.hasError('min')">
+        Percentual de multa deve ser maior ou igual a 0.
+      </mat-error>
+
+      <mat-error *ngIf="form.get('percentualMulta')?.hasError('max')">
+        Percentual de multa deve ser menor ou igual a 100.
+      </mat-error>
+
+    </mat-form-field>
+
+    <!-- Parcelas -->
+    <div class="parcelas-header">
+      <h3>{{ parcelas.length + ' Parcela(s)'}} </h3>
+      <button *ngIf="!isDetail" type="button" mat-raised-button color="primary" (click)="adicionarParcela()">
+        Adicionar parcela
+      </button>
+    </div>
+
+    <div formArrayName="parcelas">
+
+      <div class="parcela-card" *ngFor="let parcela of parcelas.controls; let i = index" [formGroupName]="i">
+
+        <mat-card>
+
+          <div class="parcela-grid">
+
+            <!-- Número da parcela -->
+            <mat-form-field appearance="outline">
+              <mat-label>Número</mat-label>
+              <input matInput type="number" formControlName="numeroParcela">
+            </mat-form-field>
+
+            <!-- Data de vencimento da parcela -->
+            <mat-form-field appearance="outline">
+              <mat-label> Data vencimento </mat-label>
+              <input matInput type="date" formControlName="dataVencimento">
+            </mat-form-field>
+
+            <!-- Valor da parcela -->
+            <mat-form-field appearance="outline">
+              <mat-label> Valor </mat-label>
+              <!-- <input matInput type="number" formControlName="valor"> -->
+              <input matInput mask="separator.2" thousandSeparator="." decimalMarker="," formControlName="valor">
+            </mat-form-field>
+
+            <!-- Botão remover parcela -->
+            <button *ngIf="!isDetail" type="button" mat-icon-button color="warn" (click)="removerParcela(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+
+          </div>
+
+        </mat-card>
+
+      </div>
+
+    </div>
+
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button *ngIf="isDetail" mat-button type="button" (click)="fechar()">Fechar</button>
+    <div *ngIf="!isDetail">
+      <button mat-button type="button" (click)="fechar()">Cancelar</button>
+      <button mat-raised-button color="primary" type="button" (click)="salvar()" [disabled]="form.invalid">
+        Salvar
+      </button>
+    </div>
+  </mat-dialog-actions>
+
+</form>
