@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiURL: 'https://localhost:7154/api',
+  apiURL: 'https://gestao-titulos-api.onrender.com/api/titulos',
 };
